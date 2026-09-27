@@ -20,12 +20,12 @@ services:
         generateValue: true
       - key: CRON_SECRET
         generateValue: true
-      # CAUTION: Render's free plan has no persistent disk, so this file lives
-      # on ephemeral storage — wiped on every deploy/restart. Fine for the demo;
-      # before relying on it, see the "Persistència a Render" note in
-      # docs/ARCHITECTURE.md (paid disk vs. free external Postgres).
+      # Neon Postgres (free tier): Render's free plan has no persistent disk,
+      # so SQLite can't be used in production. Create a project at neon.tech,
+      # copy its connection string and adapt it to the asyncpg driver, e.g.
+      # postgresql+asyncpg://<user>:<password>@<host>/<db>?ssl=require
       - key: DATABASE_URL
-        value: sqlite+aiosqlite:///./kibo.db
+        sync: false
       - key: GEMINI_API_KEY
         sync: false
       - key: GOOGLE_CLIENT_ID

@@ -8,7 +8,7 @@ Complementa [SCOPE.md](SCOPE.md) (què fa el bot). Aquest document descriu **com
 | Llenguatge | Python 3.12 |
 | Bot | python-telegram-bot 21, en mode webhook (sense JobQueue: vegeu "Planificador") |
 | Servidor web | FastAPI + Uvicorn (webhook de Telegram, `/check-reminders`, callback d'OAuth, health check) |
-| Base de dades | SQLite + SQLAlchemy 2 (async, aiosqlite) + Alembic per a les migracions |
+| Base de dades | Postgres (Neon, pla gratuït) + SQLAlchemy 2 (async, asyncpg) + Alembic. En local, SQLite (aiosqlite) per no necessitar cap servei extern |
 | Configuració | pydantic-settings (`.env`) |
 | IA | Gemini (text i àudio en una sola crida, sortida estructurada), darrere d'una interfície |
 | Temps i geocodificació | Open-Meteo (sense clau; també retorna la zona horària) |
@@ -83,9 +83,10 @@ kibo-bot-V2/
 - En producció (`BOT_MODE=webhook`), Telegram truca a `POST /telegram/webhook`, que confirma a l'instant i deixa el processament (que pot trigar per les crides a Gemini o Google) al bucle intern de PTB, ja en marxa gràcies a `concurrent_updates=True`.
 - En desenvolupament local es pot seguir fent servir `BOT_MODE=polling` (és més senzill perquè no cal exposar cap URL pública), però l'entorn de Render sempre és `webhook`.
 
-**Persistència a Render (pendent de decidir abans de la F5)**
-- El pla gratuït de Render **no té disc persistent**: el sistema de fitxers és efímer i es reinicia a cada desplegament (i pot esborrar-se també en un reinici). Això vol dir que el fitxer SQLite no sobreviu de manera fiable.
-- És suficient per continuar desenvolupant i per gravar el vídeo demo, però abans de fer-lo servir de debò caldrà triar: (a) pujar al pla de pagament més barat de Render per tenir un disc, o (b) fer servir una base de dades Postgres gratuïta externa (per exemple Supabase o Neon) canviant només `DATABASE_URL`, ja que SQLAlchemy ho permet sense tocar el codi.
+**Persistència: Postgres extern (Neon), no SQLite**
+- El pla gratuït de Render **no té disc persistent**: el sistema de fitxers és efímer i es reinicia a cada desplegament. Un fitxer SQLite no hi sobreviuria.
+- En producció fem servir **Neon** (Postgres gratuït, sense caducitat): es connecta amb `DATABASE_URL=postgresql+asyncpg://<usuari>:<contrasenya>@<host>/<bd>?ssl=require`. Neon "pausa" el projecte si no té activitat i es desperta sol a la primera consulta, cosa que encaixa amb un bot que també es pot adormir.
+- En **desenvolupament local** es continua fent servir SQLite (`sqlite+aiosqlite:///./kibo.db`, el valor per defecte) perquè no calgui cap servei extern només per provar el bot. El codi (SQLAlchemy + Alembic) és el mateix per als dos casos; només canvia `DATABASE_URL`.
 
 ## Variables d'entorn (`.env.example`)
 `TELEGRAM_TOKEN`, `BOT_MODE`, `PUBLIC_URL`, `WEBHOOK_SECRET`, `DATABASE_URL`, `CRON_SECRET`, `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ENCRYPTION_KEY`, `STATE_SECRET`
@@ -98,4 +99,4 @@ kibo-bot-V2/
 | F2: Google | OAuth per usuari, Agenda (avui i setmana), Tasques (llistar, afegir, feta) | Es connecta el compte i es veuen els esdeveniments i tasques reals |
 | F3: IA i recordatoris | Interpreter de Gemini (text i veu), targeta de confirmació, recordatoris i `reminders_cron.run_due_checks` | **El guió del vídeo demo funciona de principi a fi** |
 | F4: Briefing | Temps, agenda, tasques i notícies RSS, enviament diari via `/check-reminders` i `/briefing_now` de depuració | El briefing arriba a l'hora correcta |
-| F5: Producció | Decidir la persistència (disc de pagament o Postgres extern), desplegament a Render (webhook + cron-job.org), README per a Fiverr, tests, gravació del vídeo | El bot funciona 24/7 i el vídeo està gravat |
+| F5: Producció | Crear el projecte a Neon, desplegament a Render (webhook + cron-job.org), README per a Fiverr, tests, gravació del vídeo | El bot funciona 24/7 i el vídeo està gravat |

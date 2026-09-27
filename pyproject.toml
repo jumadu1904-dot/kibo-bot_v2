@@ -9,7 +9,8 @@ dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.32",
     "sqlalchemy[asyncio]>=2.0",
-    "aiosqlite>=0.20",
+    "asyncpg>=0.29",     # production DB: Postgres (Neon free tier)
+    "aiosqlite>=0.20",   # only for local dev/tests, see docs/ARCHITECTURE.md
     "alembic>=1.13",
     "pydantic-settings>=2.6",
 ]

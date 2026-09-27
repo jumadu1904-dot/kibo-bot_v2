@@ -25,6 +25,12 @@ An external cron (cron-job.org, every 5 minutes) must call
 `GET /check-reminders?token=<CRON_SECRET>` — that's what replaces in-process
 scheduling for reminders and the daily briefing (see
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#planificador-cron-extern-en-lloc-de-temporitzadors-interns)).
-Before relying on this in production, read that doc's persistence note: the
-free plan has no persistent disk, so SQLite data doesn't reliably survive
-deploys/restarts.
+
+The free plan also has no persistent disk, so the database is **Neon**
+(Postgres, free forever) instead of SQLite. Create a project at
+[neon.tech](https://neon.tech), then set on Render:
+```
+DATABASE_URL=postgresql+asyncpg://<user>:<password>@<host>/<db>?ssl=require
+```
+Locally, SQLite stays the default (`.env.example`) so development needs no
+external service.
