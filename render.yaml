@@ -1,0 +1,38 @@
+# Render Blueprint — describes the service so a future "New +" > "Blueprint"
+# deploy on Render can pick it up. Committing this file does NOT deploy
+# anything by itself; nothing happens until it's connected on render.com.
+services:
+  - type: web
+    name: kibo-bot
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head"
+    startCommand: "uvicorn kibo.main:app --app-dir src --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    envVars:
+      - key: BOT_MODE
+        value: webhook
+      - key: TELEGRAM_TOKEN
+        sync: false
+      - key: PUBLIC_URL
+        sync: false # set to https://<your-service>.onrender.com once created
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
+      # CAUTION: Render's free plan has no persistent disk, so this file lives
+      # on ephemeral storage — wiped on every deploy/restart. Fine for the demo;
+      # before relying on it, see the "Persistència a Render" note in
+      # docs/ARCHITECTURE.md (paid disk vs. free external Postgres).
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./kibo.db
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: STATE_SECRET
+        generateValue: true

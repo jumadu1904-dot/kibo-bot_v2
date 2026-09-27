@@ -1,0 +1,4 @@
+{
+  "start.welcome_new": "👋 ¡Hola {name}! Soy Kibo, tu asistente personal de productividad.\n\nPronto tendrás la configuración completa.",
+  "start.welcome_back": "👋 ¡Bienvenido de nuevo, {name}!"
+}
