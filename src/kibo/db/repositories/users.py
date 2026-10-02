@@ -13,3 +13,44 @@ async def create(session: AsyncSession, telegram_id: int, lang: str = "en") -> U
     session.add(user)
     await session.commit()
     return user
+
+
+async def set_language(session: AsyncSession, user: User, lang: str) -> User:
+    user.lang = lang
+    await session.commit()
+    return user
+
+
+async def set_location(
+    session: AsyncSession,
+    user: User,
+    *,
+    city: str | None,
+    lat: float,
+    lon: float,
+    timezone: str,
+) -> User:
+    user.city = city
+    user.lat = lat
+    user.lon = lon
+    user.timezone = timezone
+    await session.commit()
+    return user
+
+
+async def set_briefing(session: AsyncSession, user: User, briefing_time: str | None) -> User:
+    user.briefing_time = briefing_time
+    await session.commit()
+    return user
+
+
+async def set_news_topics(session: AsyncSession, user: User, topics: list[str]) -> User:
+    user.news_topics = topics
+    await session.commit()
+    return user
+
+
+async def set_onboarding_step(session: AsyncSession, user: User, step: str) -> User:
+    user.onboarding_step = step
+    await session.commit()
+    return user

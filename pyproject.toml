@@ -13,10 +13,11 @@ dependencies = [
     "aiosqlite>=0.20",   # only for local dev/tests, see docs/ARCHITECTURE.md
     "alembic>=1.13",
     "pydantic-settings>=2.6",
+    "httpx>=0.27",       # Open-Meteo (geocoding + timezone lookup), see docs/ARCHITECTURE.md
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "httpx>=0.27", "ruff>=0.7"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.7"]
 
 [build-system]
 requires = ["setuptools>=68"]

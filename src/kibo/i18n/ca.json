@@ -1,4 +1,61 @@
 {
-  "start.welcome_new": "👋 Hola {name}! Sóc en Kibo, el teu assistent personal de productivitat.\n\nAviat tindràs la configuració completa.",
-  "start.welcome_back": "👋 Benvingut de nou, {name}!"
+  "start.welcome_new": "Hola {name}! Sóc en Kibo, el teu assistent personal de productivitat.\n\nAnem a configurar-ho tot — només trigarà un minut.",
+  "start.welcome_back": "Benvingut de nou, {name}!",
+
+  "onboarding.language.prompt": "Tria el teu idioma:",
+
+  "onboarding.location.prompt": "On ets? Comparteix la teva ubicació (per al temps i la teva hora local) o simplement escriu la teva ciutat.",
+  "location.share_button": "Comparteix la ubicació",
+  "location.city_not_found": "No he trobat aquesta ciutat. Prova d'escriure-la d'una altra manera (p. ex. \"Barcelona\" o \"Boston, US\").",
+  "location.confirm": "{name}, {country} — és correcte?",
+  "location.confirm_yes": "Sí",
+  "location.confirm_retry": "Torna-ho a provar",
+  "location.saved": "Ubicació desada.",
+
+  "onboarding.briefing.prompt": "A quina hora vols el teu briefing diari?",
+  "briefing.button_custom": "Hora personalitzada",
+  "briefing.button_off": "Desactivat",
+  "briefing.custom_prompt": "Envia'm una hora en format HH:MM (24h), p. ex. 08:30.",
+  "briefing.invalid_time": "Això no sembla una hora vàlida. Envia-la com HH:MM, p. ex. 08:30.",
+  "briefing.saved": "Hora del briefing desada.",
+
+  "onboarding.topics.prompt": "Tria els temes de notícies per al teu briefing (toca per marcar/desmarcar i després Fet):",
+  "topics.general": "General",
+  "topics.tech": "Tecnologia",
+  "topics.business": "Negocis",
+  "topics.science": "Ciència",
+  "topics.health": "Salut",
+  "topics.sports": "Esports",
+  "topics.done_button": "Fet",
+  "topics.saved": "Temes de notícies desats.",
+
+  "onboarding.google.prompt": "Vols connectar Google Calendar i Google Tasks ara? També ho pots fer més endavant des de Configuració.",
+  "google.connect_button": "Connecta Google",
+  "google.later_button": "Més tard",
+  "google.placeholder": "La connexió amb Google arribarà a la propera fase (F2). Continuem sense ella per ara.",
+
+  "menu.title": "Menú principal — què vols fer?",
+  "menu.agenda": "📅 Agenda",
+  "menu.reminders": "⏰ Recordatoris",
+  "menu.tasks": "✅ Tasques",
+  "menu.briefing": "☀️ Briefing",
+  "menu.settings": "⚙️ Configuració",
+  "menu.placeholder": "Encara no disponible — arribarà en una futura actualització.",
+  "menu.back_button": "⬅️ Enrere",
+  "menu.home_button": "🏠 Menú",
+
+  "settings.summary": "Configuració\n\nIdioma: {language}\nUbicació: {location}\nBriefing: {briefing}\nTemes: {topics}\nGoogle: {google}",
+  "settings.language_button": "Idioma",
+  "settings.location_button": "Ubicació",
+  "settings.briefing_button": "Briefing",
+  "settings.topics_button": "Temes",
+  "settings.google_button": "Google",
+  "settings.value_off": "Desactivat",
+  "settings.value_none": "Sense definir",
+  "settings.value_not_connected": "No connectat",
+
+  "placeholder.today": "Encara no disponible — arribarà en una futura actualització.",
+  "placeholder.tasks": "Encara no disponible — arribarà en una futura actualització.",
+
+  "text.hint_use_menu": "Encara no entenc text lliure — prova /menu."
 }

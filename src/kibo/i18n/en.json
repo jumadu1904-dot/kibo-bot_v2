@@ -1,4 +1,61 @@
 {
-  "start.welcome_new": "👋 Hi {name}! I'm Kibo, your personal productivity assistant.\n\nThe full setup is coming soon.",
-  "start.welcome_back": "👋 Welcome back, {name}!"
+  "start.welcome_new": "Hi {name}! I'm Kibo, your personal productivity assistant.\n\nLet's get you set up — it only takes a minute.",
+  "start.welcome_back": "Welcome back, {name}!",
+
+  "onboarding.language.prompt": "Choose your language:",
+
+  "onboarding.location.prompt": "Now, where are you? Share your location (for weather and your local time) or just type your city name.",
+  "location.share_button": "Share my location",
+  "location.city_not_found": "I couldn't find that city. Try typing it differently (e.g. \"Barcelona\" or \"Boston, US\").",
+  "location.confirm": "{name}, {country} — is this right?",
+  "location.confirm_yes": "Yes",
+  "location.confirm_retry": "Try again",
+  "location.saved": "Location saved.",
+
+  "onboarding.briefing.prompt": "When would you like your daily briefing?",
+  "briefing.button_custom": "Custom time",
+  "briefing.button_off": "Off",
+  "briefing.custom_prompt": "Send me a time in HH:MM format (24h), e.g. 08:30.",
+  "briefing.invalid_time": "That doesn't look like a valid time. Send it as HH:MM, e.g. 08:30.",
+  "briefing.saved": "Briefing time saved.",
+
+  "onboarding.topics.prompt": "Pick the news topics for your briefing (tap to toggle, then Done):",
+  "topics.general": "General",
+  "topics.tech": "Technology",
+  "topics.business": "Business",
+  "topics.science": "Science",
+  "topics.health": "Health",
+  "topics.sports": "Sports",
+  "topics.done_button": "Done",
+  "topics.saved": "News topics saved.",
+
+  "onboarding.google.prompt": "Want to connect Google Calendar and Google Tasks now? You can also do this later from Settings.",
+  "google.connect_button": "Connect Google",
+  "google.later_button": "Later",
+  "google.placeholder": "Google connection is coming in the next phase (F2). Continuing without it for now.",
+
+  "menu.title": "Main menu — what would you like to do?",
+  "menu.agenda": "📅 Agenda",
+  "menu.reminders": "⏰ Reminders",
+  "menu.tasks": "✅ Tasks",
+  "menu.briefing": "☀️ Briefing",
+  "menu.settings": "⚙️ Settings",
+  "menu.placeholder": "Not available yet — coming in a future update.",
+  "menu.back_button": "⬅️ Back",
+  "menu.home_button": "🏠 Menu",
+
+  "settings.summary": "Settings\n\nLanguage: {language}\nLocation: {location}\nBriefing: {briefing}\nTopics: {topics}\nGoogle: {google}",
+  "settings.language_button": "Language",
+  "settings.location_button": "Location",
+  "settings.briefing_button": "Briefing",
+  "settings.topics_button": "Topics",
+  "settings.google_button": "Google",
+  "settings.value_off": "Off",
+  "settings.value_none": "Not set",
+  "settings.value_not_connected": "Not connected",
+
+  "placeholder.today": "Not available yet — coming in a future update.",
+  "placeholder.tasks": "Not available yet — coming in a future update.",
+
+  "text.hint_use_menu": "I don't understand free text yet — try /menu."
 }

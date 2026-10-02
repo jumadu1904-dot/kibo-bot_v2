@@ -1,4 +1,61 @@
 {
-  "start.welcome_new": "👋 ¡Hola {name}! Soy Kibo, tu asistente personal de productividad.\n\nPronto tendrás la configuración completa.",
-  "start.welcome_back": "👋 ¡Bienvenido de nuevo, {name}!"
+  "start.welcome_new": "¡Hola {name}! Soy Kibo, tu asistente personal de productividad.\n\nVamos a configurarlo todo — solo tarda un minuto.",
+  "start.welcome_back": "¡Bienvenido de nuevo, {name}!",
+
+  "onboarding.language.prompt": "Elige tu idioma:",
+
+  "onboarding.location.prompt": "¿Dónde estás? Comparte tu ubicación (para el tiempo y tu hora local) o simplemente escribe tu ciudad.",
+  "location.share_button": "Compartir mi ubicación",
+  "location.city_not_found": "No he encontrado esa ciudad. Prueba a escribirla de otra forma (p. ej. \"Barcelona\" o \"Boston, US\").",
+  "location.confirm": "{name}, {country} — ¿es correcto?",
+  "location.confirm_yes": "Sí",
+  "location.confirm_retry": "Probar otra vez",
+  "location.saved": "Ubicación guardada.",
+
+  "onboarding.briefing.prompt": "¿A qué hora quieres tu briefing diario?",
+  "briefing.button_custom": "Hora personalizada",
+  "briefing.button_off": "Desactivado",
+  "briefing.custom_prompt": "Envíame una hora en formato HH:MM (24h), p. ej. 08:30.",
+  "briefing.invalid_time": "Eso no parece una hora válida. Envíala como HH:MM, p. ej. 08:30.",
+  "briefing.saved": "Hora del briefing guardada.",
+
+  "onboarding.topics.prompt": "Elige los temas de noticias para tu briefing (toca para marcar/desmarcar y luego Hecho):",
+  "topics.general": "General",
+  "topics.tech": "Tecnología",
+  "topics.business": "Negocios",
+  "topics.science": "Ciencia",
+  "topics.health": "Salud",
+  "topics.sports": "Deportes",
+  "topics.done_button": "Hecho",
+  "topics.saved": "Temas de noticias guardados.",
+
+  "onboarding.google.prompt": "¿Quieres conectar Google Calendar y Google Tasks ahora? También puedes hacerlo más adelante desde Configuración.",
+  "google.connect_button": "Conectar Google",
+  "google.later_button": "Más tarde",
+  "google.placeholder": "La conexión con Google llegará en la siguiente fase (F2). Continuamos sin ella por ahora.",
+
+  "menu.title": "Menú principal — ¿qué quieres hacer?",
+  "menu.agenda": "📅 Agenda",
+  "menu.reminders": "⏰ Recordatorios",
+  "menu.tasks": "✅ Tareas",
+  "menu.briefing": "☀️ Briefing",
+  "menu.settings": "⚙️ Configuración",
+  "menu.placeholder": "Aún no disponible — llegará en una futura actualización.",
+  "menu.back_button": "⬅️ Atrás",
+  "menu.home_button": "🏠 Menú",
+
+  "settings.summary": "Configuración\n\nIdioma: {language}\nUbicación: {location}\nBriefing: {briefing}\nTemas: {topics}\nGoogle: {google}",
+  "settings.language_button": "Idioma",
+  "settings.location_button": "Ubicación",
+  "settings.briefing_button": "Briefing",
+  "settings.topics_button": "Temas",
+  "settings.google_button": "Google",
+  "settings.value_off": "Desactivado",
+  "settings.value_none": "Sin definir",
+  "settings.value_not_connected": "No conectado",
+
+  "placeholder.today": "Aún no disponible — llegará en una futura actualización.",
+  "placeholder.tasks": "Aún no disponible — llegará en una futura actualización.",
+
+  "text.hint_use_menu": "Todavía no entiendo texto libre — prueba /menu."
 }
