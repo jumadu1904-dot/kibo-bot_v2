@@ -43,7 +43,6 @@
   "menu.tasks": "✅ Tasks",
   "menu.briefing": "☀️ Briefing",
   "menu.settings": "⚙️ Settings",
-  "menu.placeholder": "Not available yet — coming in a future update.",
   "menu.back_button": "⬅️ Back",
   "menu.home_button": "🏠 Menu",
 
@@ -95,5 +94,12 @@
 
   "reminders.list_title": "⏰ Your upcoming reminders:",
   "reminders.empty": "No upcoming reminders.",
-  "reminders.due_notification": "⏰ Reminder: {text}"
+  "reminders.due_notification": "⏰ Reminder: {text}",
+
+  "briefing.title": "☀️ Your daily briefing",
+  "briefing.tasks_title": "✅ Tasks",
+  "briefing.news_title": "📰 News",
+  "briefing.agenda_not_connected": "Connect Google (Settings → Google) to see your agenda here.",
+  "briefing.news_empty": "No news topics selected (Settings → Topics).",
+  "briefing.empty": "Nothing to show — enable a block in Settings."
 }

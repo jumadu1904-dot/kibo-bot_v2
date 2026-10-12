@@ -53,3 +53,13 @@ async def test_timezone_for(monkeypatch):
 
     _patch_client(monkeypatch, handler)
     assert await open_meteo.timezone_for(41.38, 2.18) == "Europe/Madrid"
+
+
+async def test_current_weather(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert "api.open-meteo.com" in str(request.url)
+        return httpx.Response(200, json={"current": {"temperature_2m": 18.4, "weather_code": 3}})
+
+    _patch_client(monkeypatch, handler)
+    weather = await open_meteo.current_weather(41.38, 2.18)
+    assert weather == open_meteo.CurrentWeather(temperature_c=18.4, weather_code=3)

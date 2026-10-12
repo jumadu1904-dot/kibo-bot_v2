@@ -9,6 +9,7 @@ from telegram.ext import (
 
 from kibo.bot.handlers import (
     agenda,
+    briefing,
     google,
     menu,
     onboarding,
@@ -50,6 +51,7 @@ def build_application(settings_: Settings) -> Application:
     application.add_handler(CommandHandler("settings", settings.settings_command))
     application.add_handler(CommandHandler("today", today_command))
     application.add_handler(CommandHandler("tasks", tasks_command))
+    application.add_handler(CommandHandler("briefing_now", briefing.briefing_now_command))
 
     application.add_handler(CallbackQueryHandler(onboarding.on_callback, pattern=r"^(onboard|settings):"))
     application.add_handler(CallbackQueryHandler(menu.on_callback, pattern=r"^menu:"))

@@ -2,13 +2,11 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from kibo.bot import callbacks
-from kibo.bot.keyboards.menu import back_home_keyboard, main_menu_keyboard
+from kibo.bot.keyboards.menu import main_menu_keyboard
 from kibo.db.models import User
 from kibo.db.repositories import users
 from kibo.db.session import get_sessionmaker
 from kibo.i18n import t
-
-PLACEHOLDER_ACTIONS = {"briefing"}
 
 
 async def send(message, user: User) -> None:
@@ -51,5 +49,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         from kibo.bot.handlers import reminders
 
         await reminders.edit(query, user)
-    elif action in PLACEHOLDER_ACTIONS:
-        await query.edit_message_text(t("menu.placeholder", user.lang), reply_markup=back_home_keyboard(user.lang))
+    elif action == "briefing":
+        from kibo.bot.handlers import briefing
+
+        await briefing.edit(query, user)

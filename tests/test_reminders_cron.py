@@ -51,3 +51,18 @@ async def test_run_due_checks_sends_and_marks_sent(session: AsyncSession):
     await session.refresh(future)
     assert due.status == "sent"
     assert future.status == "pending"
+
+
+async def test_run_due_checks_also_sends_due_briefings(session: AsyncSession):
+    user = await users.create(session, 222)
+    user.timezone = "UTC"
+    user.briefing_time = "00:00"
+    user.briefing_blocks = []
+    await session.commit()
+
+    app = _FakeApplication()
+    await reminders_cron.run_due_checks(app)
+
+    assert app.bot.sent == [(222, "Nothing to show — enable a block in Settings.")]
+    await session.refresh(user)
+    assert user.last_briefing_sent is not None

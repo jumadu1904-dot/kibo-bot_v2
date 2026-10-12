@@ -43,7 +43,6 @@
   "menu.tasks": "✅ Tasques",
   "menu.briefing": "☀️ Briefing",
   "menu.settings": "⚙️ Configuració",
-  "menu.placeholder": "Encara no disponible — arribarà en una futura actualització.",
   "menu.back_button": "⬅️ Enrere",
   "menu.home_button": "🏠 Menú",
 
@@ -95,5 +94,12 @@
 
   "reminders.list_title": "⏰ Els teus propers recordatoris:",
   "reminders.empty": "No hi ha recordatoris propers.",
-  "reminders.due_notification": "⏰ Recordatori: {text}"
+  "reminders.due_notification": "⏰ Recordatori: {text}",
+
+  "briefing.title": "☀️ El teu briefing diari",
+  "briefing.tasks_title": "✅ Tasques",
+  "briefing.news_title": "📰 Notícies",
+  "briefing.agenda_not_connected": "Connecta Google (Configuració → Google) per veure la teva agenda aquí.",
+  "briefing.news_empty": "No has triat temes de notícies (Configuració → Temes).",
+  "briefing.empty": "Res a mostrar — activa algun bloc a Configuració."
 }

@@ -17,17 +17,14 @@ from telegram.ext import Application
 from kibo.db.repositories import users as users_repo
 from kibo.db.session import get_sessionmaker
 from kibo.i18n import t
+from kibo.services import briefing
 from kibo.services import reminders as reminders_service
 
 logger = logging.getLogger(__name__)
 
 
 async def run_due_checks(bot: Application) -> None:
-    """Send every reminder that is due right now.
-
-    TODO(F4): query users whose local briefing_time matches the current
-    UTC-converted minute and hasn't been sent today, build and send it.
-    """
+    """Send every reminder and daily briefing that is due right now."""
     now = datetime.now(timezone.utc)
     async with get_sessionmaker()() as session:
         due = await reminders_service.get_due(session, now)
@@ -45,3 +42,5 @@ async def run_due_checks(bot: Application) -> None:
                 logger.warning("Failed to send reminder %s to user %s", reminder.id, user.id, exc_info=True)
                 continue
             await reminders_service.mark_sent(session, reminder)
+
+        await briefing.send_due(bot, session, now)

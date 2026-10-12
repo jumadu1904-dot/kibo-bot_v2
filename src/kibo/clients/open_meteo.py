@@ -19,6 +19,12 @@ class CityMatch:
     timezone: str
 
 
+@dataclass
+class CurrentWeather:
+    temperature_c: float
+    weather_code: int  # WMO code, see kibo.services.weather
+
+
 async def geocode_city(name: str) -> CityMatch | None:
     """Look up a city by free-text name. Returns the best (first) match,
     or None if Open-Meteo found nothing."""
@@ -55,3 +61,17 @@ async def timezone_for(lat: float, lon: float) -> str:
         response.raise_for_status()
         data = response.json()
     return data["timezone"]
+
+
+async def current_weather(lat: float, lon: float) -> CurrentWeather:
+    """Current temperature and WMO weather code — the weather block of the
+    daily briefing (see kibo.services.weather)."""
+    async with httpx.AsyncClient(timeout=10) as client:
+        response = await client.get(
+            FORECAST_URL,
+            params={"latitude": lat, "longitude": lon, "current": "temperature_2m,weather_code"},
+        )
+        response.raise_for_status()
+        data = response.json()
+    current = data["current"]
+    return CurrentWeather(temperature_c=current["temperature_2m"], weather_code=current["weather_code"])

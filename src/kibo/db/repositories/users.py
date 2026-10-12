@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,6 +8,13 @@ from kibo.db.models import User
 
 async def get_by_telegram_id(session: AsyncSession, telegram_id: int) -> User | None:
     return await session.scalar(select(User).where(User.telegram_id == telegram_id))
+
+
+async def list_with_briefing(session: AsyncSession) -> list[User]:
+    """Every user with a daily briefing enabled — checked by the cron on
+    each tick (see kibo.services.briefing.send_due)."""
+    result = await session.scalars(select(User).where(User.briefing_time.is_not(None)))
+    return list(result)
 
 
 async def get_by_id(session: AsyncSession, user_id: int) -> User | None:
@@ -44,6 +53,12 @@ async def set_location(
 
 async def set_briefing(session: AsyncSession, user: User, briefing_time: str | None) -> User:
     user.briefing_time = briefing_time
+    await session.commit()
+    return user
+
+
+async def mark_briefing_sent(session: AsyncSession, user: User, sent_date: date) -> User:
+    user.last_briefing_sent = sent_date
     await session.commit()
     return user
 

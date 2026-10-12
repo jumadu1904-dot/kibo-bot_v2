@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
-from sqlalchemy import JSON, BigInteger, DateTime, ForeignKey, String
+from sqlalchemy import JSON, BigInteger, Date, DateTime, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.types import TypeDecorator
 
@@ -53,6 +53,10 @@ class User(Base):
         JSON, default=lambda: ["weather", "agenda", "tasks", "news"]
     )
     news_topics: Mapped[list] = mapped_column(JSON, default=list)
+    # Local date the daily briefing last went out — lets the cron (every 5
+    # min, see kibo.services.briefing.is_due) fire exactly once per day
+    # instead of every tick after briefing_time.
+    last_briefing_sent: Mapped[date | None] = mapped_column(Date)
     onboarding_step: Mapped[str] = mapped_column(String(32), default="language")
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=_utcnow)
 

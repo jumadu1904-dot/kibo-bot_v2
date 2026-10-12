@@ -12,7 +12,7 @@ Complementa [SCOPE.md](SCOPE.md) (què fa el bot). Aquest document descriu **com
 | Configuració | pydantic-settings (`.env`) |
 | IA | Gemini (text i àudio en una sola crida, sortida estructurada), darrere d'una interfície |
 | Temps i geocodificació | Open-Meteo (sense clau; també retorna la zona horària) |
-| Notícies | Google News RSS per tema i idioma (feedparser) |
+| Notícies | Google News RSS per tema i idioma (parsejat amb `xml.etree`, no `feedparser`, per no afegir una dependència només per llegir `<title>`/`<link>` — igual que la resta de `clients/`, sense SDKs) |
 | Google | Calendar API + Tasks API, amb OAuth per usuari |
 | Hosting | Render (pla gratuït, *Web Service*), HTTPS. Cron extern (cron-job.org) cada 5 min → `GET /check-reminders` |
 

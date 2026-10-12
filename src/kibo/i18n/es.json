@@ -43,7 +43,6 @@
   "menu.tasks": "✅ Tareas",
   "menu.briefing": "☀️ Briefing",
   "menu.settings": "⚙️ Configuración",
-  "menu.placeholder": "Aún no disponible — llegará en una futura actualización.",
   "menu.back_button": "⬅️ Atrás",
   "menu.home_button": "🏠 Menú",
 
@@ -95,5 +94,12 @@
 
   "reminders.list_title": "⏰ Tus próximos recordatorios:",
   "reminders.empty": "No hay recordatorios próximos.",
-  "reminders.due_notification": "⏰ Recordatorio: {text}"
+  "reminders.due_notification": "⏰ Recordatorio: {text}",
+
+  "briefing.title": "☀️ Tu briefing diario",
+  "briefing.tasks_title": "✅ Tareas",
+  "briefing.news_title": "📰 Noticias",
+  "briefing.agenda_not_connected": "Conecta Google (Configuración → Google) para ver tu agenda aquí.",
+  "briefing.news_empty": "No has elegido temas de noticias (Configuración → Temas).",
+  "briefing.empty": "Nada que mostrar — activa algún bloque en Configuración."
 }
