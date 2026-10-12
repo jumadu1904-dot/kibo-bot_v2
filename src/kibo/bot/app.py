@@ -7,7 +7,16 @@ from telegram.ext import (
     filters,
 )
 
-from kibo.bot.handlers import agenda, google, menu, onboarding, settings, start
+from kibo.bot.handlers import (
+    agenda,
+    google,
+    menu,
+    onboarding,
+    settings,
+    smart_input,
+    start,
+)
+from kibo.bot.handlers import reminders as reminders_handler
 from kibo.bot.handlers import tasks as tasks_handler
 from kibo.config import Settings
 from kibo.db.repositories import users
@@ -48,7 +57,11 @@ def build_application(settings_: Settings) -> Application:
     application.add_handler(CallbackQueryHandler(google.on_callback, pattern=r"^google:"))
     application.add_handler(CallbackQueryHandler(agenda.on_callback, pattern=r"^agenda:"))
     application.add_handler(CallbackQueryHandler(tasks_handler.on_callback, pattern=r"^tasks:"))
+    application.add_handler(CallbackQueryHandler(reminders_handler.on_callback, pattern=r"^reminders:"))
+    application.add_handler(CallbackQueryHandler(smart_input.on_confirm_callback, pattern=r"^confirm:"))
+    application.add_handler(CallbackQueryHandler(smart_input.on_tasklist_callback, pattern=r"^tasklist:"))
 
     application.add_handler(MessageHandler(filters.LOCATION, onboarding.on_location))
+    application.add_handler(MessageHandler(filters.VOICE, smart_input.on_voice))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, onboarding.on_text))
     return application

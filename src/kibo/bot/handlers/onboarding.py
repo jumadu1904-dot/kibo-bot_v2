@@ -196,8 +196,14 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         async with get_sessionmaker()() as session:
             user = await users.get_by_telegram_id(session, update.effective_user.id)
-        if user is not None:
+        if user is None:
+            return
+        if user.onboarding_step != "done":
             await update.message.reply_text(t("text.hint_use_menu", user.lang))
+            return
+        from kibo.bot.handlers import smart_input
+
+        await smart_input.on_text(update, context)
 
 
 async def _handle_lang(query, context: ContextTypes.DEFAULT_TYPE, namespace: str, arg: str) -> None:

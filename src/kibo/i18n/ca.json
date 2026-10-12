@@ -72,5 +72,28 @@
   "tasks.add_prompt": "Quina és la tasca?",
   "tasks.added": "Afegida: {title}",
 
-  "text.hint_use_menu": "Encara no entenc text lliure — prova /menu."
+  "text.hint_use_menu": "Encara no entenc text lliure — prova /menu.",
+
+  "smart_input.card_title": "Això és el que he entès:",
+  "smart_input.action_event": "📅 {title} — {when}",
+  "smart_input.action_reminder": "⏰ {text} — {when}",
+  "smart_input.action_task": "✅ {title}",
+  "smart_input.action_note": "📝 {text}",
+  "smart_input.when_all_day": "{date} (tot el dia)",
+  "smart_input.list_suffix": "(a «{list}»)",
+  "smart_input.due_suffix": "— venç {date}",
+  "smart_input.pick_list_prompt": "A quina llista vols afegir «{title}»?",
+  "smart_input.confirm_button": "✅ Confirmar",
+  "smart_input.edit_button": "✏️ Editar",
+  "smart_input.cancel_button": "❌ Cancel·lar",
+  "smart_input.cancelled": "Cancel·lat.",
+  "smart_input.edit_prompt": "D'acord, envia'm el text corregit.",
+  "smart_input.expired": "Aquesta confirmació ha caducat — torna-ho a enviar.",
+  "smart_input.done_header": "✅ Fet:",
+  "smart_input.error": "No t'he entès — prova de reformular-ho, o fes servir /menu.",
+  "smart_input.query_error": "No ho he pogut comprovar ara mateix — torna-ho a provar d'aquí una estona.",
+
+  "reminders.list_title": "⏰ Els teus propers recordatoris:",
+  "reminders.empty": "No hi ha recordatoris propers.",
+  "reminders.due_notification": "⏰ Recordatori: {text}"
 }

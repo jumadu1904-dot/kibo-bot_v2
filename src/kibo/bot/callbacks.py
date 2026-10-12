@@ -19,6 +19,9 @@ NAMESPACE_MENU = "menu"
 NAMESPACE_GOOGLE = "google"
 NAMESPACE_AGENDA = "agenda"
 NAMESPACE_TASKS = "tasks"
+NAMESPACE_CONFIRM = "confirm"
+NAMESPACE_REMINDERS = "reminders"
+NAMESPACE_TASKLIST = "tasklist"
 
 
 def build(namespace: str, action: str, arg: str = "") -> str:

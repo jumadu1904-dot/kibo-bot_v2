@@ -72,5 +72,28 @@
   "tasks.add_prompt": "¿Cuál es la tarea?",
   "tasks.added": "Añadida: {title}",
 
-  "text.hint_use_menu": "Todavía no entiendo texto libre — prueba /menu."
+  "text.hint_use_menu": "Todavía no entiendo texto libre — prueba /menu.",
+
+  "smart_input.card_title": "Esto es lo que he entendido:",
+  "smart_input.action_event": "📅 {title} — {when}",
+  "smart_input.action_reminder": "⏰ {text} — {when}",
+  "smart_input.action_task": "✅ {title}",
+  "smart_input.action_note": "📝 {text}",
+  "smart_input.when_all_day": "{date} (todo el día)",
+  "smart_input.list_suffix": "(en «{list}»)",
+  "smart_input.due_suffix": "— vence {date}",
+  "smart_input.pick_list_prompt": "¿En qué lista pongo «{title}»?",
+  "smart_input.confirm_button": "✅ Confirmar",
+  "smart_input.edit_button": "✏️ Editar",
+  "smart_input.cancel_button": "❌ Cancelar",
+  "smart_input.cancelled": "Cancelado.",
+  "smart_input.edit_prompt": "Vale, envíame el texto corregido.",
+  "smart_input.expired": "Esta confirmación ha caducado — vuelve a enviarlo.",
+  "smart_input.done_header": "✅ Hecho:",
+  "smart_input.error": "No he entendido eso — prueba a reformularlo, o usa /menu.",
+  "smart_input.query_error": "No he podido comprobarlo ahora mismo — prueba de nuevo en un momento.",
+
+  "reminders.list_title": "⏰ Tus próximos recordatorios:",
+  "reminders.empty": "No hay recordatorios próximos.",
+  "reminders.due_notification": "⏰ Recordatorio: {text}"
 }

@@ -72,5 +72,28 @@
   "tasks.add_prompt": "What's the task?",
   "tasks.added": "Added: {title}",
 
-  "text.hint_use_menu": "I don't understand free text yet — try /menu."
+  "text.hint_use_menu": "I don't understand free text yet — try /menu.",
+
+  "smart_input.card_title": "Here's what I understood:",
+  "smart_input.action_event": "📅 {title} — {when}",
+  "smart_input.action_reminder": "⏰ {text} — {when}",
+  "smart_input.action_task": "✅ {title}",
+  "smart_input.action_note": "📝 {text}",
+  "smart_input.when_all_day": "{date} (all day)",
+  "smart_input.list_suffix": "(in «{list}»)",
+  "smart_input.due_suffix": "— due {date}",
+  "smart_input.pick_list_prompt": "Which list should «{title}» go in?",
+  "smart_input.confirm_button": "✅ Confirm",
+  "smart_input.edit_button": "✏️ Edit",
+  "smart_input.cancel_button": "❌ Cancel",
+  "smart_input.cancelled": "Cancelled.",
+  "smart_input.edit_prompt": "Okay, send me the corrected text.",
+  "smart_input.expired": "This confirmation has expired — try sending it again.",
+  "smart_input.done_header": "✅ Done:",
+  "smart_input.error": "I couldn't understand that — try rephrasing, or use /menu.",
+  "smart_input.query_error": "I couldn't check that right now — try again in a moment.",
+
+  "reminders.list_title": "⏰ Your upcoming reminders:",
+  "reminders.empty": "No upcoming reminders.",
+  "reminders.due_notification": "⏰ Reminder: {text}"
 }

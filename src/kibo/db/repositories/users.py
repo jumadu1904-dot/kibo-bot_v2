@@ -8,6 +8,10 @@ async def get_by_telegram_id(session: AsyncSession, telegram_id: int) -> User | 
     return await session.scalar(select(User).where(User.telegram_id == telegram_id))
 
 
+async def get_by_id(session: AsyncSession, user_id: int) -> User | None:
+    return await session.get(User, user_id)
+
+
 async def create(session: AsyncSession, telegram_id: int, lang: str = "en") -> User:
     user = User(telegram_id=telegram_id, lang=lang)
     session.add(user)
