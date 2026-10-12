@@ -1,3 +1,4 @@
+import hashlib
 from functools import lru_cache
 from typing import Literal
 
@@ -12,6 +13,19 @@ class Settings(BaseSettings):
     public_url: str = ""
     webhook_secret: str = ""
     database_url: str = "sqlite+aiosqlite:///./kibo.db"
+
+    @property
+    def webhook_secret_token(self) -> str | None:
+        """Telegram's `secret_token` only allows [A-Za-z0-9_-], but a
+        provider's auto-generated WEBHOOK_SECRET can be plain base64 (e.g.
+        Render's `generateValue`), which includes '+'/'/'/'=' and makes
+        `set_webhook` fail with "Secret token contains illegal characters".
+        Hashing deterministically derives a safe token from whatever raw
+        value ends up in the env var, instead of depending on the provider
+        to generate an already-safe one."""
+        if not self.webhook_secret:
+            return None
+        return hashlib.sha256(self.webhook_secret.encode()).hexdigest()
 
     # Shared secret for GET /check-reminders. The external cron (cron-job.org)
     # must send it as ?token=... — without it, anyone could trigger the job.

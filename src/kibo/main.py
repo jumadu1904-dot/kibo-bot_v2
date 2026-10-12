@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     else:
         await bot.bot.set_webhook(
             f"{settings.public_url}/telegram/webhook",
-            secret_token=settings.webhook_secret or None,
+            secret_token=settings.webhook_secret_token,
         )
     try:
         yield

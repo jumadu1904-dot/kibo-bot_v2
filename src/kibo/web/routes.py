@@ -33,7 +33,7 @@ async def telegram_webhook(request: Request) -> dict[str, bool]:
     retries/gives up if we don't), so we only enqueue the update here — the
     Application's own background loop (started in the lifespan) picks it up
     and runs the (possibly slow) handler outside this request."""
-    secret = request.app.state.settings.webhook_secret
+    secret = request.app.state.settings.webhook_secret_token
     received = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
     if secret and not hmac.compare_digest(secret, received):
         raise HTTPException(status_code=403)
