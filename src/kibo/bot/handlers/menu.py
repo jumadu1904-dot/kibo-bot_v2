@@ -8,7 +8,7 @@ from kibo.db.repositories import users
 from kibo.db.session import get_sessionmaker
 from kibo.i18n import t
 
-PLACEHOLDER_ACTIONS = {"agenda", "reminders", "tasks", "briefing"}
+PLACEHOLDER_ACTIONS = {"reminders", "briefing"}
 
 
 async def send(message, user: User) -> None:
@@ -39,5 +39,13 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         from kibo.bot.handlers import settings
 
         await settings.edit(query, user)
+    elif action == "agenda":
+        from kibo.bot.handlers import agenda
+
+        await agenda.edit(query, user)
+    elif action == "tasks":
+        from kibo.bot.handlers import tasks
+
+        await tasks.edit(query, user)
     elif action in PLACEHOLDER_ACTIONS:
         await query.edit_message_text(t("menu.placeholder", user.lang), reply_markup=back_home_keyboard(user.lang))

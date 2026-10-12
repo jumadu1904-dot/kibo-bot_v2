@@ -32,7 +32,10 @@
   "onboarding.google.prompt": "Want to connect Google Calendar and Google Tasks now? You can also do this later from Settings.",
   "google.connect_button": "Connect Google",
   "google.later_button": "Later",
-  "google.placeholder": "Google connection is coming in the next phase (F2). Continuing without it for now.",
+  "google.disconnect_button": "Disconnect Google",
+  "google.connected_prompt": "Google Calendar and Google Tasks are connected.",
+  "google.connected_message": "✅ Google connected! You can now see your agenda and tasks.",
+  "google.not_connected": "Connect Google Calendar and Tasks first (Settings → Google) to use this.",
 
   "menu.title": "Main menu — what would you like to do?",
   "menu.agenda": "📅 Agenda",
@@ -53,9 +56,21 @@
   "settings.value_off": "Off",
   "settings.value_none": "Not set",
   "settings.value_not_connected": "Not connected",
+  "settings.value_connected": "Connected",
 
-  "placeholder.today": "Not available yet — coming in a future update.",
-  "placeholder.tasks": "Not available yet — coming in a future update.",
+  "agenda.prompt": "What would you like to see?",
+  "agenda.today_button": "Today",
+  "agenda.week_button": "This week",
+  "agenda.back_button": "⬅️ Agenda",
+  "agenda.today_title": "📅 Today",
+  "agenda.week_title": "📅 This week",
+  "agenda.empty": "No events.",
+
+  "tasks.list_title": "✅ Your tasks:",
+  "tasks.empty": "No pending tasks.",
+  "tasks.add_button": "➕ Add task",
+  "tasks.add_prompt": "What's the task?",
+  "tasks.added": "Added: {title}",
 
   "text.hint_use_menu": "I don't understand free text yet — try /menu."
 }

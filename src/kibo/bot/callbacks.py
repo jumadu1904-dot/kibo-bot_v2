@@ -14,6 +14,11 @@ NAMESPACE_SETTINGS = "settings"
 # routing (only the first matching handler runs) can't confuse the two.
 NAMESPACE_SETTINGS_MENU = "settingsmenu"
 NAMESPACE_MENU = "menu"
+# Google connect/disconnect screen, reused by onboarding (namespace=onboard,
+# "later" to skip) and Settings (namespace=settings, "disconnect").
+NAMESPACE_GOOGLE = "google"
+NAMESPACE_AGENDA = "agenda"
+NAMESPACE_TASKS = "tasks"
 
 
 def build(namespace: str, action: str, arg: str = "") -> str:

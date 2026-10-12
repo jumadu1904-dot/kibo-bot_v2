@@ -32,7 +32,10 @@
   "onboarding.google.prompt": "Vols connectar Google Calendar i Google Tasks ara? També ho pots fer més endavant des de Configuració.",
   "google.connect_button": "Connecta Google",
   "google.later_button": "Més tard",
-  "google.placeholder": "La connexió amb Google arribarà a la propera fase (F2). Continuem sense ella per ara.",
+  "google.disconnect_button": "Desconnecta Google",
+  "google.connected_prompt": "Google Calendar i Google Tasks estan connectats.",
+  "google.connected_message": "✅ Google connectat! Ja pots veure la teva agenda i les teves tasques.",
+  "google.not_connected": "Connecta Google Calendar i Tasks primer (Configuració → Google) per fer servir això.",
 
   "menu.title": "Menú principal — què vols fer?",
   "menu.agenda": "📅 Agenda",
@@ -53,9 +56,21 @@
   "settings.value_off": "Desactivat",
   "settings.value_none": "Sense definir",
   "settings.value_not_connected": "No connectat",
+  "settings.value_connected": "Connectat",
 
-  "placeholder.today": "Encara no disponible — arribarà en una futura actualització.",
-  "placeholder.tasks": "Encara no disponible — arribarà en una futura actualització.",
+  "agenda.prompt": "Què vols veure?",
+  "agenda.today_button": "Avui",
+  "agenda.week_button": "Aquesta setmana",
+  "agenda.back_button": "⬅️ Agenda",
+  "agenda.today_title": "📅 Avui",
+  "agenda.week_title": "📅 Aquesta setmana",
+  "agenda.empty": "No hi ha esdeveniments.",
+
+  "tasks.list_title": "✅ Les teves tasques:",
+  "tasks.empty": "No hi ha tasques pendents.",
+  "tasks.add_button": "➕ Afegeix tasca",
+  "tasks.add_prompt": "Quina és la tasca?",
+  "tasks.added": "Afegida: {title}",
 
   "text.hint_use_menu": "Encara no entenc text lliure — prova /menu."
 }

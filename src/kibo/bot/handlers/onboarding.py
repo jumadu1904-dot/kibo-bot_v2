@@ -51,15 +51,6 @@ async def show_topics(target, *, edit: bool, lang: str, namespace: str, selected
         await target.reply_text(text, reply_markup=markup)
 
 
-async def show_google(target, *, edit: bool, lang: str) -> None:
-    text = t("onboarding.google.prompt", lang)
-    markup = kb.google_keyboard(lang)
-    if edit:
-        await target.edit_message_text(text, reply_markup=markup)
-    else:
-        await target.reply_text(text, reply_markup=markup)
-
-
 def _location_reply_keyboard(lang: str) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         [[KeyboardButton(t("location.share_button", lang), request_location=True)]],
@@ -86,7 +77,9 @@ async def resume(message, context: ContextTypes.DEFAULT_TYPE, user: User) -> Non
     elif step == "news_topics":
         await show_topics(message, edit=False, lang=user.lang, namespace=namespace, selected=user.news_topics)
     elif step == "google":
-        await show_google(message, edit=False, lang=user.lang)
+        from kibo.bot.handlers import google as google_handler
+
+        await google_handler.show(message, edit=False, lang=user.lang, user=user, show_later=True)
     else:
         await show_language(message, edit=False, lang=user.lang, namespace=namespace)
 
@@ -196,6 +189,10 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await _handle_city_text(update, context)
     elif waiting_for == "custom_time":
         await _handle_custom_time_text(update, context)
+    elif waiting_for == "task_title":
+        from kibo.bot.handlers import tasks as tasks_handler
+
+        await tasks_handler.on_text(update, context)
     else:
         async with get_sessionmaker()() as session:
             user = await users.get_by_telegram_id(session, update.effective_user.id)
@@ -262,25 +259,13 @@ async def _handle_topics_done(query, context: ContextTypes.DEFAULT_TYPE, namespa
             user = await service.advance_step(session, user, "google")
 
     if namespace == callbacks.NAMESPACE_ONBOARD:
-        await show_google(query, edit=True, lang=user.lang)
+        from kibo.bot.handlers import google as google_handler
+
+        await google_handler.show(query, edit=True, lang=user.lang, user=user, show_later=True)
     else:
         from kibo.bot.handlers import settings as settings_handler
 
         await settings_handler.edit(query, user)
-
-
-async def _handle_google(query, context: ContextTypes.DEFAULT_TYPE, arg: str) -> None:
-    async with get_sessionmaker()() as session:
-        user = await users.get_by_telegram_id(session, query.from_user.id)
-        user = await service.advance_step(session, user, "done")
-
-    from kibo.bot.handlers import menu as menu_handler
-
-    if arg == "connect":
-        await query.edit_message_text(t("google.placeholder", user.lang))
-        await menu_handler.send(query.message, user)
-    else:
-        await menu_handler.edit(query, user)
 
 
 async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -300,5 +285,3 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await _handle_city_confirm(query, context, namespace)
     elif action == "city_retry":
         await _handle_city_retry(query, context)
-    elif action == "google":
-        await _handle_google(query, context, arg)

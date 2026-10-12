@@ -32,7 +32,10 @@
   "onboarding.google.prompt": "¿Quieres conectar Google Calendar y Google Tasks ahora? También puedes hacerlo más adelante desde Configuración.",
   "google.connect_button": "Conectar Google",
   "google.later_button": "Más tarde",
-  "google.placeholder": "La conexión con Google llegará en la siguiente fase (F2). Continuamos sin ella por ahora.",
+  "google.disconnect_button": "Desconectar Google",
+  "google.connected_prompt": "Google Calendar y Google Tasks están conectados.",
+  "google.connected_message": "✅ ¡Google conectado! Ya puedes ver tu agenda y tus tareas.",
+  "google.not_connected": "Conecta Google Calendar y Tasks primero (Configuración → Google) para usar esto.",
 
   "menu.title": "Menú principal — ¿qué quieres hacer?",
   "menu.agenda": "📅 Agenda",
@@ -53,9 +56,21 @@
   "settings.value_off": "Desactivado",
   "settings.value_none": "Sin definir",
   "settings.value_not_connected": "No conectado",
+  "settings.value_connected": "Conectado",
 
-  "placeholder.today": "Aún no disponible — llegará en una futura actualización.",
-  "placeholder.tasks": "Aún no disponible — llegará en una futura actualización.",
+  "agenda.prompt": "¿Qué quieres ver?",
+  "agenda.today_button": "Hoy",
+  "agenda.week_button": "Esta semana",
+  "agenda.back_button": "⬅️ Agenda",
+  "agenda.today_title": "📅 Hoy",
+  "agenda.week_title": "📅 Esta semana",
+  "agenda.empty": "No hay eventos.",
+
+  "tasks.list_title": "✅ Tus tareas:",
+  "tasks.empty": "No hay tareas pendientes.",
+  "tasks.add_button": "➕ Añadir tarea",
+  "tasks.add_prompt": "¿Cuál es la tarea?",
+  "tasks.added": "Añadida: {title}",
 
   "text.hint_use_menu": "Todavía no entiendo texto libre — prueba /menu."
 }

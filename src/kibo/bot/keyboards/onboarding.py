@@ -63,22 +63,3 @@ def topics_keyboard(selected: list[str], namespace: str, lang: str) -> InlineKey
         ]
     )
     return InlineKeyboardMarkup(rows)
-
-
-def google_keyboard(lang: str) -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    t("google.connect_button", lang),
-                    callback_data=callbacks.build(callbacks.NAMESPACE_ONBOARD, "google", "connect"),
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    t("google.later_button", lang),
-                    callback_data=callbacks.build(callbacks.NAMESPACE_ONBOARD, "google", "later"),
-                )
-            ],
-        ]
-    )

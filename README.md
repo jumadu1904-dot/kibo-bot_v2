@@ -12,7 +12,14 @@ cp .env.example .env                               # then set TELEGRAM_TOKEN
 .venv/Scripts/python -m uvicorn kibo.main:app --app-dir src --reload
 .venv/Scripts/python -m pytest
 ```
-`BOT_MODE=polling` (default) needs no public URL and is the simplest way to develop locally.
+`BOT_MODE=polling` (default) needs no public URL for Telegram itself, but
+connecting Google (Calendar + Tasks) still requires `PUBLIC_URL` — FastAPI
+always serves `/oauth/google/callback` regardless of bot mode. For local
+dev, `PUBLIC_URL=http://localhost:8000` plus the same redirect URI added to
+your Google Cloud OAuth client's Authorized redirect URIs is enough (Google
+allows plain `http://localhost` for "Web application" clients). See
+`.env.example` for `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`, `ENCRYPTION_KEY`
+and `STATE_SECRET` generation notes.
 
 ## Deployment (Render, not yet done)
 Production always runs `BOT_MODE=webhook`, since Render's free plan sleeps the

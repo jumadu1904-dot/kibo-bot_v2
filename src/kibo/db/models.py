@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, BigInteger, DateTime, String
+from sqlalchemy import JSON, BigInteger, DateTime, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -29,3 +29,14 @@ class User(Base):
     news_topics: Mapped[list] = mapped_column(JSON, default=list)
     onboarding_step: Mapped[str] = mapped_column(String(32), default="language")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class GoogleAccount(Base):
+    __tablename__ = "google_accounts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, index=True)
+    # Fernet-encrypted (see kibo.security) — never store the raw refresh token.
+    refresh_token: Mapped[str] = mapped_column(String(512))
+    scopes: Mapped[str] = mapped_column(String(256))
+    connected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)

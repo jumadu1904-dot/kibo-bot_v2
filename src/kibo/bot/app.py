@@ -7,26 +7,23 @@ from telegram.ext import (
     filters,
 )
 
-from kibo.bot.handlers import menu, onboarding, settings, start
+from kibo.bot.handlers import agenda, google, menu, onboarding, settings, start
+from kibo.bot.handlers import tasks as tasks_handler
 from kibo.config import Settings
 from kibo.db.repositories import users
 from kibo.db.session import get_sessionmaker
-from kibo.i18n import t
-
-
-async def _placeholder_command(update: Update, context, key: str) -> None:
-    async with get_sessionmaker()() as session:
-        user = await users.get_by_telegram_id(session, update.effective_user.id)
-    lang = user.lang if user else "en"
-    await update.effective_message.reply_text(t(key, lang))
 
 
 async def today_command(update: Update, context) -> None:
-    await _placeholder_command(update, context, "placeholder.today")
+    async with get_sessionmaker()() as session:
+        user = await users.get_by_telegram_id(session, update.effective_user.id)
+    await agenda.send(update.effective_message, user)
 
 
 async def tasks_command(update: Update, context) -> None:
-    await _placeholder_command(update, context, "placeholder.tasks")
+    async with get_sessionmaker()() as session:
+        user = await users.get_by_telegram_id(session, update.effective_user.id)
+    await tasks_handler.send(update.effective_message, user)
 
 
 def build_application(settings_: Settings) -> Application:
@@ -48,6 +45,9 @@ def build_application(settings_: Settings) -> Application:
     application.add_handler(CallbackQueryHandler(onboarding.on_callback, pattern=r"^(onboard|settings):"))
     application.add_handler(CallbackQueryHandler(menu.on_callback, pattern=r"^menu:"))
     application.add_handler(CallbackQueryHandler(settings.on_callback, pattern=r"^settingsmenu:"))
+    application.add_handler(CallbackQueryHandler(google.on_callback, pattern=r"^google:"))
+    application.add_handler(CallbackQueryHandler(agenda.on_callback, pattern=r"^agenda:"))
+    application.add_handler(CallbackQueryHandler(tasks_handler.on_callback, pattern=r"^tasks:"))
 
     application.add_handler(MessageHandler(filters.LOCATION, onboarding.on_location))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, onboarding.on_text))
