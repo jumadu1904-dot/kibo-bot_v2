@@ -67,6 +67,61 @@ async def test_list_events_returns_items(monkeypatch):
     assert items == [{"summary": "Meeting"}]
 
 
+async def test_list_events_targets_given_calendar(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert "calendar/v3/calendars/work%40group.calendar.google.com/events" in str(request.url)
+        return httpx.Response(200, json={"items": []})
+
+    _patch_client(monkeypatch, handler)
+    await google_api.list_events(
+        "access-123", calendar_id="work@group.calendar.google.com", time_min="2026-01-01T00:00:00", time_max="2026-01-02T00:00:00"
+    )
+
+
+async def test_list_calendars_returns_items(monkeypatch):
+    _patch_client(monkeypatch, lambda request: httpx.Response(200, json={"items": [{"id": "primary", "summary": "Joan"}]}))
+    items = await google_api.list_calendars("access-123")
+    assert items == [{"id": "primary", "summary": "Joan"}]
+
+
+async def test_insert_event_targets_given_calendar(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert "calendar/v3/calendars/work%40x/events" in str(request.url)
+        assert json.loads(request.content) == {"summary": "Dentist"}
+        return httpx.Response(200, json={"id": "e1"})
+
+    _patch_client(monkeypatch, handler)
+    result = await google_api.insert_event("access-123", calendar_id="work@x", body={"summary": "Dentist"})
+    assert result["id"] == "e1"
+
+
+async def test_update_event_patches_given_event(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "PATCH"
+        assert request.url.path.endswith("/e1")
+        assert json.loads(request.content) == {"summary": "Renamed"}
+        return httpx.Response(200, json={"id": "e1", "summary": "Renamed"})
+
+    _patch_client(monkeypatch, handler)
+    result = await google_api.update_event("access-123", calendar_id="primary", event_id="e1", body={"summary": "Renamed"})
+    assert result["summary"] == "Renamed"
+
+
+async def test_delete_event_sends_delete(monkeypatch):
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "DELETE"
+        assert request.url.path.endswith("/e1")
+        return httpx.Response(204)
+
+    _patch_client(monkeypatch, handler)
+    await google_api.delete_event("access-123", calendar_id="primary", event_id="e1")
+
+
+async def test_delete_event_tolerates_already_gone(monkeypatch):
+    _patch_client(monkeypatch, lambda request: httpx.Response(404))
+    await google_api.delete_event("access-123", calendar_id="primary", event_id="e1")
+
+
 async def test_list_tasks_returns_items(monkeypatch):
     _patch_client(monkeypatch, lambda request: httpx.Response(200, json={"items": [{"id": "1", "title": "Buy milk"}]}))
     items = await google_api.list_tasks("access-123")

@@ -42,11 +42,21 @@ _TOOLS = [
             "type": "OBJECT",
             "properties": {
                 "title": {"type": "STRING"},
-                "start": {"type": "STRING", "description": "ISO 8601 UTC datetime, e.g. 2026-10-04T09:00:00Z"},
+                "start": {
+                    "type": "STRING",
+                    "description": (
+                        "ISO 8601 UTC datetime, e.g. 2026-10-04T09:00:00Z. Omit entirely if the user "
+                        "gave no date/time at all — never invent one; the app will ask separately."
+                    ),
+                },
                 "end": {"type": "STRING", "description": "ISO 8601 UTC datetime, optional"},
                 "all_day": {"type": "BOOLEAN"},
+                "calendar_name": {
+                    "type": "STRING",
+                    "description": "Only if the user explicitly named a calendar to add it to",
+                },
             },
-            "required": ["title", "start"],
+            "required": ["title"],
         },
     },
     {
@@ -143,9 +153,15 @@ class CreateEvent(BaseModel):
     model_config = ConfigDict(extra="ignore")
     type: Literal["event"]
     title: str
-    start: datetime
+    # None until the user supplies a date/time — see kibo.bot.handlers.smart_input's
+    # clarification step, which asks for it before anything reaches the confirmation card.
+    start: datetime | None = None
     end: datetime | None = None
     all_day: bool = False
+    calendar_name: str | None = None
+    # Set by kibo.bot.handlers.smart_input once the user has picked a calendar
+    # for an ambiguous event — never filled in by Gemini itself.
+    calendar_id: str | None = None
 
 
 class CreateReminder(BaseModel):
@@ -269,3 +285,58 @@ async def parse(
             raise InterpretError(str(fallback_error)) from fallback_error
 
     return _parse_items(raw)
+
+
+_DATETIME_TOOL = [
+    {
+        "name": "datetime",
+        "description": "The date/time the user's message specifies.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "start": {"type": "STRING", "description": "ISO 8601 UTC datetime"},
+                "all_day": {
+                    "type": "BOOLEAN",
+                    "description": "true if the user only gave a date, with no time of day",
+                },
+            },
+            "required": ["start", "all_day"],
+        },
+    }
+]
+
+_DATETIME_PROMPT_TEMPLATE = """The user's current local date/time is {now_local} ({timezone}).
+They were asked when a calendar event should happen, and replied below. Interpret their reply as a
+date/time (resolving anything relative, like "tomorrow" or "at 10", against the current date/time
+above) and call datetime() with it converted to UTC. If they only gave a day with no time of day
+(or said something like "all day"), set all_day=true and use 00:00 as the time.
+
+Reply:
+\"\"\"{text}\"\"\"
+"""
+
+
+async def parse_datetime(*, user: User, text: str) -> tuple[datetime, bool] | None:
+    """Interpret a single date/time reply (used when clarifying a missing
+    event start — see kibo.bot.handlers.smart_input and
+    kibo.bot.handlers.agenda's "new event" flow). Returns (start_utc,
+    all_day), or None if Gemini couldn't make sense of it."""
+    settings = get_settings()
+    now_local = datetime.now(ZoneInfo(user.timezone))
+    prompt = _DATETIME_PROMPT_TEMPLATE.format(
+        now_local=now_local.isoformat(timespec="minutes"), timezone=user.timezone, text=text
+    )
+    try:
+        raw = await gemini.generate(api_key=settings.gemini_api_key, model=settings.gemini_model, prompt=prompt, tools=_DATETIME_TOOL)
+    except gemini.GeminiError:
+        return None
+
+    for item in raw:
+        if item.get("type") != "datetime" or not item.get("start"):
+            continue
+        try:
+            start = datetime.fromisoformat(item["start"])
+        except ValueError:
+            continue
+        return start, bool(item.get("all_day", False))
+    return None

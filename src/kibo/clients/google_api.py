@@ -6,14 +6,21 @@ it in; this module only knows how to shape the HTTP calls."""
 
 from dataclasses import dataclass
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 REVOKE_URL = "https://oauth2.googleapis.com/revoke"
-CALENDAR_EVENTS_URL = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+CALENDAR_LIST_URL = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
 TASKLISTS_URL = "https://tasks.googleapis.com/tasks/v1/users/@me/lists"
+
+
+def _calendar_events_url(calendar_id: str) -> str:
+    # Calendar ids can be email-like (shared calendars) or contain "#" (the
+    # holiday/birthdays ones) — both need escaping to be a valid path segment.
+    return f"https://www.googleapis.com/calendar/v3/calendars/{quote(calendar_id, safe='')}/events"
 
 
 def _tasks_url(tasklist_id: str) -> str:
@@ -93,10 +100,20 @@ def _auth_headers(access_token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {access_token}"}
 
 
-async def list_events(access_token: str, *, time_min: str, time_max: str) -> list[dict[str, Any]]:
+async def list_calendars(access_token: str) -> list[dict[str, Any]]:
+    async with httpx.AsyncClient(timeout=10) as client:
+        response = await client.get(CALENDAR_LIST_URL, headers=_auth_headers(access_token))
+        response.raise_for_status()
+        data = response.json()
+    return data.get("items", [])
+
+
+async def list_events(
+    access_token: str, *, calendar_id: str = "primary", time_min: str, time_max: str
+) -> list[dict[str, Any]]:
     async with httpx.AsyncClient(timeout=10) as client:
         response = await client.get(
-            CALENDAR_EVENTS_URL,
+            _calendar_events_url(calendar_id),
             headers=_auth_headers(access_token),
             params={
                 "timeMin": time_min,
@@ -110,15 +127,38 @@ async def list_events(access_token: str, *, time_min: str, time_max: str) -> lis
     return data.get("items", [])
 
 
-async def insert_event(access_token: str, *, body: dict[str, Any]) -> dict[str, Any]:
+async def insert_event(access_token: str, *, calendar_id: str = "primary", body: dict[str, Any]) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=10) as client:
         response = await client.post(
-            CALENDAR_EVENTS_URL,
+            _calendar_events_url(calendar_id),
             headers=_auth_headers(access_token),
             json=body,
         )
         response.raise_for_status()
         return response.json()
+
+
+async def update_event(
+    access_token: str, *, calendar_id: str = "primary", event_id: str, body: dict[str, Any]
+) -> dict[str, Any]:
+    async with httpx.AsyncClient(timeout=10) as client:
+        response = await client.patch(
+            f"{_calendar_events_url(calendar_id)}/{event_id}",
+            headers=_auth_headers(access_token),
+            json=body,
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+async def delete_event(access_token: str, *, calendar_id: str = "primary", event_id: str) -> None:
+    async with httpx.AsyncClient(timeout=10) as client:
+        response = await client.delete(
+            f"{_calendar_events_url(calendar_id)}/{event_id}",
+            headers=_auth_headers(access_token),
+        )
+        if response.status_code != 404:  # already gone is as good as deleted
+            response.raise_for_status()
 
 
 async def list_tasklists(access_token: str) -> list[dict[str, Any]]:

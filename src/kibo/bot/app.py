@@ -62,6 +62,7 @@ def build_application(settings_: Settings) -> Application:
     application.add_handler(CallbackQueryHandler(reminders_handler.on_callback, pattern=r"^reminders:"))
     application.add_handler(CallbackQueryHandler(smart_input.on_confirm_callback, pattern=r"^confirm:"))
     application.add_handler(CallbackQueryHandler(smart_input.on_tasklist_callback, pattern=r"^tasklist:"))
+    application.add_handler(CallbackQueryHandler(smart_input.on_calendar_callback, pattern=r"^calendar:"))
 
     application.add_handler(MessageHandler(filters.LOCATION, onboarding.on_location))
     application.add_handler(MessageHandler(filters.VOICE, smart_input.on_voice))

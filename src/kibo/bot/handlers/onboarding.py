@@ -193,6 +193,14 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         from kibo.bot.handlers import tasks as tasks_handler
 
         await tasks_handler.on_text(update, context)
+    elif waiting_for == "event_datetime":
+        from kibo.bot.handlers import smart_input
+
+        await smart_input.on_datetime_text(update, context)
+    elif waiting_for in ("event_title", "event_edit_title", "event_edit_when"):
+        from kibo.bot.handlers import agenda as agenda_handler
+
+        await agenda_handler.on_text(update, context)
     else:
         async with get_sessionmaker()() as session:
             user = await users.get_by_telegram_id(session, update.effective_user.id)

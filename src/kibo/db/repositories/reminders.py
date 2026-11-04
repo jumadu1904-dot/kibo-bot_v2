@@ -47,3 +47,19 @@ async def cancel(session: AsyncSession, user_id: int, reminder_id: int) -> bool:
     reminder.status = "cancelled"
     await session.commit()
     return True
+
+
+async def cancel_by_google_event_id(session: AsyncSession, user_id: int, google_event_id: str) -> None:
+    """Cancels the reminder for a deleted event (see kibo.services.calendar.
+    delete_event's caller, kibo.bot.handlers.agenda) — otherwise its
+    notification would still fire for an event that no longer exists."""
+    result = await session.scalars(
+        select(Reminder).where(
+            Reminder.user_id == user_id,
+            Reminder.google_event_id == google_event_id,
+            Reminder.status == "pending",
+        )
+    )
+    for reminder in result:
+        reminder.status = "cancelled"
+    await session.commit()

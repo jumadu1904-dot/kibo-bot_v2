@@ -22,6 +22,7 @@ NAMESPACE_TASKS = "tasks"
 NAMESPACE_CONFIRM = "confirm"
 NAMESPACE_REMINDERS = "reminders"
 NAMESPACE_TASKLIST = "tasklist"
+NAMESPACE_CALENDAR = "calendar"
 
 
 def build(namespace: str, action: str, arg: str = "") -> str:

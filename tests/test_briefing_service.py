@@ -57,7 +57,7 @@ async def test_build_includes_every_enabled_block_when_connected(session: AsyncS
 
     async def fake_today_events(session, user):
         start = datetime(2026, 1, 1, 10, 0, tzinfo=ZoneInfo(user.timezone))
-        return [EventView(summary="Meeting", start=start, all_day=False)]
+        return [EventView(id="e1", calendar_id="primary", calendar_summary="", summary="Meeting", start=start, all_day=False)]
 
     async def fake_list_tasks(session, user):
         return [TaskView(id="1", title="Buy milk")]

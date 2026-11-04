@@ -25,6 +25,17 @@ async def test_parse_returns_typed_actions(monkeypatch):
     assert actions[1].title == "Buy milk"
 
 
+async def test_parse_returns_event_with_no_start_when_omitted(monkeypatch):
+    async def fake_generate(**kwargs):
+        return [{"type": "event", "title": "Dentist appointment"}]
+
+    monkeypatch.setattr(interpreter.gemini, "generate", fake_generate)
+    actions = await interpreter.parse(user=_user(), text="add a dentist appointment")
+    assert len(actions) == 1
+    assert isinstance(actions[0], interpreter.CreateEvent)
+    assert actions[0].start is None
+
+
 async def test_parse_returns_query_without_requiring_an_answer(monkeypatch):
     # Gemini only ever has to capture the question — it has no real access
     # to the user's data, so it must never be asked to answer it itself
@@ -121,3 +132,33 @@ async def test_parse_raises_when_both_models_exhausted(monkeypatch):
     monkeypatch.setattr(interpreter.gemini, "generate", fake_generate)
     with pytest.raises(interpreter.InterpretError):
         await interpreter.parse(user=_user(), text="whatever")
+
+
+async def test_parse_datetime_returns_start_and_all_day(monkeypatch):
+    async def fake_generate(**kwargs):
+        return [{"type": "datetime", "start": "2026-01-02T09:00:00Z", "all_day": False}]
+
+    monkeypatch.setattr(interpreter.gemini, "generate", fake_generate)
+    result = await interpreter.parse_datetime(user=_user(), text="tomorrow at 10")
+    assert result is not None
+    start, all_day = result
+    assert start.isoformat() == "2026-01-02T09:00:00+00:00"
+    assert all_day is False
+
+
+async def test_parse_datetime_returns_none_when_gemini_fails(monkeypatch):
+    from kibo.clients import gemini
+
+    async def fake_generate(**kwargs):
+        raise gemini.GeminiError("boom", status_code=400)
+
+    monkeypatch.setattr(interpreter.gemini, "generate", fake_generate)
+    assert await interpreter.parse_datetime(user=_user(), text="whenever") is None
+
+
+async def test_parse_datetime_returns_none_when_no_call_made(monkeypatch):
+    async def fake_generate(**kwargs):
+        return []
+
+    monkeypatch.setattr(interpreter.gemini, "generate", fake_generate)
+    assert await interpreter.parse_datetime(user=_user(), text="whenever") is None

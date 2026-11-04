@@ -54,6 +54,36 @@ async def set_task_list(session: AsyncSession, pending_id: int, task_index: int,
     return [ACTIONS_BY_TYPE[item["type"]].model_validate(item) for item in payload]
 
 
+async def set_event_calendar(session: AsyncSession, pending_id: int, event_index: int, *, calendar_id: str, calendar_name: str) -> list[Action] | None:
+    """Fill in the calendar the user picked for payload[event_index] (an
+    "event" action — see kibo.bot.handlers.smart_input's "which calendar"
+    step) and return the updated actions, or None if the pending row is
+    gone/expired."""
+    pending = await repo.get(session, pending_id)
+    if pending is None or pending.expires_at < datetime.now(timezone.utc):
+        return None
+
+    payload = list(pending.payload)
+    payload[event_index] = {**payload[event_index], "calendar_id": calendar_id, "calendar_name": calendar_name}
+    await repo.update_payload(session, pending, payload)
+    return [ACTIONS_BY_TYPE[item["type"]].model_validate(item) for item in payload]
+
+
+async def set_event_datetime(session: AsyncSession, pending_id: int, event_index: int, *, start: datetime, all_day: bool) -> list[Action] | None:
+    """Fill in the date/time the user replied with for payload[event_index]
+    (an "event" action with no start — see kibo.bot.handlers.smart_input's
+    "when is it" step) and return the updated actions, or None if the
+    pending row is gone/expired."""
+    pending = await repo.get(session, pending_id)
+    if pending is None or pending.expires_at < datetime.now(timezone.utc):
+        return None
+
+    payload = list(pending.payload)
+    payload[event_index] = {**payload[event_index], "start": start.isoformat(), "all_day": all_day}
+    await repo.update_payload(session, pending, payload)
+    return [ACTIONS_BY_TYPE[item["type"]].model_validate(item) for item in payload]
+
+
 async def save(session: AsyncSession, pending_id: int, actions: list[Action]) -> None:
     """Overwrite the stored payload with `actions` as they stand now (used
     after a resolution pass mutates e.g. auto-resolved task lists)."""

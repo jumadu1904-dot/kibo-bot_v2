@@ -23,6 +23,10 @@ async def cancel(session: AsyncSession, user: User, reminder_id: int) -> bool:
     return await repo.cancel(session, user.id, reminder_id)
 
 
+async def cancel_by_google_event_id(session: AsyncSession, user: User, google_event_id: str) -> None:
+    await repo.cancel_by_google_event_id(session, user.id, google_event_id)
+
+
 async def get_due(session: AsyncSession, before: datetime) -> list[Reminder]:
     return await repo.get_due(session, before)
 

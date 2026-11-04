@@ -17,3 +17,11 @@ def confirm_keyboard(lang: str, pending_id: int) -> InlineKeyboardMarkup:
             ]
         ]
     )
+
+
+def cancel_only_keyboard(lang: str, pending_id: int) -> InlineKeyboardMarkup:
+    """Used by a mid-clarification prompt (e.g. "when is it?") that isn't
+    itself a button choice — still needs a way out without retyping."""
+    return InlineKeyboardMarkup(
+        [[InlineKeyboardButton(t("smart_input.cancel_button", lang), callback_data=callbacks.build(ns, "no", str(pending_id)))]]
+    )
