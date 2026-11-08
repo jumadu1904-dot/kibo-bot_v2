@@ -28,6 +28,11 @@ def _tasks_url(tasklist_id: str) -> str:
 
 SCOPES = [
     "https://www.googleapis.com/auth/calendar.events",
+    # calendar.events alone does not cover GET .../calendarList (needed to
+    # enumerate the user's calendars so Agenda/briefing can merge every
+    # calendar, not just "primary") — Google returns 403 Forbidden on that
+    # endpoint without this scope too.
+    "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
     "https://www.googleapis.com/auth/tasks",
 ]
 

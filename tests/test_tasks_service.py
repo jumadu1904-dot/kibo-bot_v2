@@ -137,8 +137,9 @@ async def test_complete_task_calls_client(session: AsyncSession, monkeypatch):
     async def fake_get_access_token(session, user):
         return "access-token"
 
-    async def fake_complete_task(access_token, *, task_id):
+    async def fake_complete_task(access_token, *, task_id, tasklist_id):
         called["task_id"] = task_id
+        called["tasklist_id"] = tasklist_id
         return {"status": "completed"}
 
     monkeypatch.setattr(tasks.google_auth, "get_access_token", fake_get_access_token)
@@ -146,3 +147,4 @@ async def test_complete_task_calls_client(session: AsyncSession, monkeypatch):
 
     assert await tasks.complete_task(session, user, "task-1") is True
     assert called["task_id"] == "task-1"
+    assert called["tasklist_id"] == "@default"

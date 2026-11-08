@@ -12,41 +12,51 @@ from kibo.services import google_auth
 from kibo.services import tasks as tasks_service
 
 
-async def _render(user: User):
-    """Fetch the task list and build (text, markup), or None if Google
-    isn't connected."""
+async def _render(context: ContextTypes.DEFAULT_TYPE, user: User):
+    """Fetch the task list across every Google task list (not just the
+    default one — accounts with one list per subject keep most tasks
+    elsewhere) and build (text, markup), or None if Google isn't connected.
+    Task refs (which list + task id a tapped button means) are kept in
+    context.user_data, same pattern as kibo.bot.handlers.agenda."""
     async with get_sessionmaker()() as session:
-        items = await tasks_service.list_tasks(session, user)
+        items = await tasks_service.list_tasks_all_lists(session, user)
     if items is None:
         return None
+    context.user_data["tasks_refs"] = {
+        i: {"task_id": item.id, "tasklist_id": item.tasklist_id} for i, item in enumerate(items)
+    }
     text = t("tasks.list_title", user.lang) if items else t("tasks.empty", user.lang)
     return text, tasks_list_keyboard(user.lang, items)
 
 
-async def send(message, user: User) -> None:
+async def send(context: ContextTypes.DEFAULT_TYPE, message, user: User) -> None:
     async with get_sessionmaker()() as session:
         connected = await google_auth.is_connected(session, user)
     if not connected:
         await message.reply_text(t("google.not_connected", user.lang), reply_markup=back_home_keyboard(user.lang))
         return
-    text, markup = await _render(user)
+    text, markup = await _render(context, user)
     await message.reply_text(text, reply_markup=markup)
 
 
-async def edit(query, user: User) -> None:
+async def edit(context: ContextTypes.DEFAULT_TYPE, query, user: User) -> None:
     async with get_sessionmaker()() as session:
         connected = await google_auth.is_connected(session, user)
     if not connected:
         await query.edit_message_text(t("google.not_connected", user.lang), reply_markup=back_home_keyboard(user.lang))
         return
-    text, markup = await _render(user)
+    text, markup = await _render(context, user)
     await query.edit_message_text(text, reply_markup=markup)
 
 
-async def _handle_done(query, user: User, task_id: str) -> None:
+async def _handle_done(query, context: ContextTypes.DEFAULT_TYPE, user: User, idx: int) -> None:
+    ref = (context.user_data.get("tasks_refs") or {}).get(idx)
+    if ref is None:
+        await query.edit_message_text(t("smart_input.expired", user.lang), reply_markup=back_home_keyboard(user.lang))
+        return
     async with get_sessionmaker()() as session:
-        await tasks_service.complete_task(session, user, task_id)
-    result = await _render(user)
+        await tasks_service.complete_task(session, user, ref["task_id"], tasklist_id=ref["tasklist_id"])
+    result = await _render(context, user)
     if result is None:
         await query.edit_message_text(t("google.not_connected", user.lang), reply_markup=back_home_keyboard(user.lang))
         return
@@ -69,7 +79,7 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(t("google.not_connected", user.lang), reply_markup=back_home_keyboard(user.lang))
         return
 
-    result = await _render(user)
+    result = await _render(context, user)
     text, markup = result
     await update.message.reply_text(t("tasks.added", user.lang, title=task.title))
     await update.message.reply_text(text, reply_markup=markup)
@@ -84,6 +94,6 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         user = await users.get_by_telegram_id(session, query.from_user.id)
 
     if action == "done":
-        await _handle_done(query, user, arg)
+        await _handle_done(query, context, user, int(arg))
     elif action == "add":
         await _handle_add(query, context, user)

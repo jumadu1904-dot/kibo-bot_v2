@@ -9,8 +9,8 @@ ns = callbacks.NAMESPACE_TASKS
 
 def tasks_list_keyboard(lang: str, tasks: list[TaskView]) -> InlineKeyboardMarkup:
     rows = [
-        [InlineKeyboardButton(f"☐ {task.title}", callback_data=callbacks.build(ns, "done", task.id))]
-        for task in tasks
+        [InlineKeyboardButton(f"☐ {task.title}", callback_data=callbacks.build(ns, "done", str(i)))]
+        for i, task in enumerate(tasks)
     ]
     rows.append([InlineKeyboardButton(t("tasks.add_button", lang), callback_data=callbacks.build(ns, "add"))])
     rows.append(

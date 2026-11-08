@@ -19,6 +19,7 @@ from kibo.services import google_auth
 class TaskView:
     id: str
     title: str
+    tasklist_id: str = "@default"
 
 
 @dataclass
@@ -72,9 +73,19 @@ async def list_all_tasks(session: AsyncSession, user: User) -> list[tuple[str, l
     result = []
     for lst in lists:
         items = await google_api.list_tasks(access_token, tasklist_id=lst["id"])
-        tasks = [TaskView(id=i["id"], title=i.get("title", "(untitled)")) for i in items]
+        tasks = [TaskView(id=i["id"], title=i.get("title", "(untitled)"), tasklist_id=lst["id"]) for i in items]
         result.append((lst.get("title", ""), tasks))
     return result
+
+
+async def list_tasks_all_lists(session: AsyncSession, user: User) -> list[TaskView] | None:
+    """Flattened version of `list_all_tasks`, for the Tasks menu — an
+    account with one list per subject/project has most of its tasks outside
+    the default "My Tasks" list, which `list_tasks` alone would miss."""
+    grouped = await list_all_tasks(session, user)
+    if grouped is None:
+        return None
+    return [task for _, tasks in grouped for task in tasks]
 
 
 async def add_task(
@@ -96,9 +107,9 @@ async def add_task(
     return TaskView(id=item["id"], title=item.get("title", title))
 
 
-async def complete_task(session: AsyncSession, user: User, task_id: str) -> bool:
+async def complete_task(session: AsyncSession, user: User, task_id: str, tasklist_id: str = "@default") -> bool:
     access_token = await google_auth.get_access_token(session, user)
     if access_token is None:
         return False
-    await google_api.complete_task(access_token, task_id=task_id)
+    await google_api.complete_task(access_token, task_id=task_id, tasklist_id=tasklist_id)
     return True

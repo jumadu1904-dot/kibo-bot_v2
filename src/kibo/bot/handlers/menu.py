@@ -44,7 +44,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     elif action == "tasks":
         from kibo.bot.handlers import tasks
 
-        await tasks.edit(query, user)
+        await tasks.edit(context, query, user)
     elif action == "reminders":
         from kibo.bot.handlers import reminders
 

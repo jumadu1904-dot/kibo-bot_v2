@@ -40,7 +40,7 @@ async def _agenda_block(session: AsyncSession, user: User) -> str:
 
 async def _tasks_block(session: AsyncSession, user: User) -> str:
     if await google_auth.is_connected(session, user):
-        items = await tasks_service.list_tasks(session, user)
+        items = await tasks_service.list_tasks_all_lists(session, user)
     else:
         items = await local_tasks_repo.list_for_user(session, user.id, kind="task")
     titles = [item.title for item in items] if items else []

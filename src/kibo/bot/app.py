@@ -1,8 +1,12 @@
+import logging
+
 from telegram import Update
+from telegram.error import TelegramError
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
     CommandHandler,
+    ContextTypes,
     MessageHandler,
     filters,
 )
@@ -23,6 +27,23 @@ from kibo.config import Settings
 from kibo.db.repositories import users
 from kibo.db.session import get_sessionmaker
 
+logger = logging.getLogger(__name__)
+
+
+async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Without this, a handler that raises leaves the user staring at a
+    button that just... stopped responding — the exception only ever
+    reached the logs. Surfacing a short message at least tells them
+    something broke instead of leaving total silence."""
+    logger.exception("Unhandled error while processing update: %s", update, exc_info=context.error)
+    if isinstance(update, Update) and update.effective_chat is not None:
+        try:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id, text="⚠️ Hi ha hagut un error. Torna-ho a provar."
+            )
+        except TelegramError:
+            logger.warning("Failed to notify user about the error above", exc_info=True)
+
 
 async def today_command(update: Update, context) -> None:
     async with get_sessionmaker()() as session:
@@ -33,7 +54,7 @@ async def today_command(update: Update, context) -> None:
 async def tasks_command(update: Update, context) -> None:
     async with get_sessionmaker()() as session:
         user = await users.get_by_telegram_id(session, update.effective_user.id)
-    await tasks_handler.send(update.effective_message, user)
+    await tasks_handler.send(context, update.effective_message, user)
 
 
 def build_application(settings_: Settings) -> Application:
@@ -67,4 +88,5 @@ def build_application(settings_: Settings) -> Application:
     application.add_handler(MessageHandler(filters.LOCATION, onboarding.on_location))
     application.add_handler(MessageHandler(filters.VOICE, smart_input.on_voice))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, onboarding.on_text))
+    application.add_error_handler(on_error)
     return application

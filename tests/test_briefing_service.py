@@ -70,7 +70,7 @@ async def test_build_includes_every_enabled_block_when_connected(session: AsyncS
 
     monkeypatch.setattr(briefing.google_auth, "is_connected", fake_is_connected)
     monkeypatch.setattr(briefing.calendar, "get_today_events", fake_today_events)
-    monkeypatch.setattr(briefing.tasks_service, "list_tasks", fake_list_tasks)
+    monkeypatch.setattr(briefing.tasks_service, "list_tasks_all_lists", fake_list_tasks)
     monkeypatch.setattr(briefing.weather, "summary", fake_weather_summary)
     monkeypatch.setattr(briefing.news, "headlines_for_topics", fake_headlines)
 
